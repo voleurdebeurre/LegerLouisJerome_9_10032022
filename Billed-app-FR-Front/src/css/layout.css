@@ -49,3 +49,7 @@
   margin:auto;
   border-radius: 8px;
 }
+
+.modal-body img{
+  width: 100%;
+}

@@ -25,7 +25,8 @@ export default class NewBill {
     formData.append('file', file)
     formData.append('email', email)
 
-    this.store
+    if(this.store){
+      this.store
       .bills()
       .create({
         data: formData,
@@ -34,15 +35,17 @@ export default class NewBill {
         }
       })
       .then(({fileUrl, key}) => {
-        console.log(fileUrl)
         this.billId = key
         this.fileUrl = fileUrl
         this.fileName = fileName
       }).catch(error => console.error(error))
+    }
+    
   }
   handleSubmit = e => {
     e.preventDefault()
     console.log('e.target.querySelector(`input[data-testid="datepicker"]`).value', e.target.querySelector(`input[data-testid="datepicker"]`).value)
+    const filePath = e.target.querySelector(`input[data-testid="file"]`).value.split(/\\/g)
     const email = JSON.parse(localStorage.getItem("user")).email
     const bill = {
       email,
@@ -57,11 +60,20 @@ export default class NewBill {
       fileName: this.fileName,
       status: 'pending'
     }
-    this.updateBill(bill)
-    this.onNavigate(ROUTES_PATH['Bills'])
+    let allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i; 
+    if(!allowedExtensions.exec(filePath)) {
+      const fileField = document.querySelector(`input[data-testid="file"]`)
+      let fileFieldError = document.createElement("span")
+      fileField.after(fileFieldError, "Merci de télécharger un fichier au format .jpg/.jpeg ou .png")
+    }else{
+      this.updateBill(bill)
+      this.onNavigate(ROUTES_PATH['Bills'])
+    }
+
   }
 
   // not need to cover this function by tests
+  /* istanbul ignore next */
   updateBill = (bill) => {
     if (this.store) {
       this.store

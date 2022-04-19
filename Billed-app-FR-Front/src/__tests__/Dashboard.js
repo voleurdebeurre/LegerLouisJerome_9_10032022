@@ -64,14 +64,25 @@ describe('Given I am connected as an Admin', () => {
       })
       document.body.innerHTML = DashboardUI({ data: { bills } })
 
-      const handleShowTickets1 = jest.fn((e) => dashboard.handleShowTickets(e, bills, 1))
-      const handleShowTickets2 = jest.fn((e) => dashboard.handleShowTickets(e, bills, 2))
-      const handleShowTickets3 = jest.fn((e) => dashboard.handleShowTickets(e, bills, 3))
-
       const icon1 = screen.getByTestId('arrow-icon1')
       const icon2 = screen.getByTestId('arrow-icon2')
       const icon3 = screen.getByTestId('arrow-icon3')
 
+      const handleShowTickets1 = jest.fn((e) => {
+        let clickedArrow = icon1
+        dashboard.handleShowTickets(e, bills, clickedArrow, 1)
+      })
+      const handleShowTickets2 = jest.fn((e) => {
+        let clickedArrow = icon2
+        dashboard.handleShowTickets(e, bills, clickedArrow, 2)
+      })
+
+      const handleShowTickets3 = jest.fn((e) => {
+        let clickedArrow = icon3
+        dashboard.handleShowTickets(e, bills, clickedArrow, 3)
+      })
+
+      
       icon1.addEventListener('click', handleShowTickets1)
       userEvent.click(icon1)
       expect(handleShowTickets1).toHaveBeenCalled()
@@ -91,6 +102,39 @@ describe('Given I am connected as an Admin', () => {
     })
   })
 
+  describe('When I am on Dashboard page and I click on arrow that is open', () => {
+    test('Then, tickets list should be folding, and cards should disappear', async () => {
+
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+      window.localStorage.setItem('user', JSON.stringify({
+        type: 'Admin'
+      }))
+
+      const dashboard = new Dashboard({
+        document, onNavigate, store: null, bills:bills, localStorage: window.localStorage
+      })
+      document.body.innerHTML = DashboardUI({ data: { bills } })
+
+      const icon1 = screen.getByTestId('arrow-icon1')
+
+      const handleShowTickets1 = jest.fn((e) => {
+        let clickedArrow = icon1
+        clickedArrow.classList.add("arrow-open")
+        dashboard.handleShowTickets(e, bills, clickedArrow, 1)
+      })
+
+      
+      icon1.addEventListener('click', handleShowTickets1)
+      userEvent.click(icon1)
+      expect(handleShowTickets1).toHaveBeenCalled()
+      expect(screen.getByTestId('arrow-icon1').classList.contains("arrow-open")).not.toBe("true")
+    })
+  })
+
   describe('When I am on Dashboard page and I click on edit icon of a card', () => {
     test('Then, right form should be filled',  () => {
 
@@ -107,8 +151,10 @@ describe('Given I am connected as an Admin', () => {
         document, onNavigate, store: null, bills:bills, localStorage: window.localStorage
       })
       document.body.innerHTML = DashboardUI({ data: { bills } })
-      const handleShowTickets1 = jest.fn((e) => dashboard.handleShowTickets(e, bills, 1))
       const icon1 = screen.getByTestId('arrow-icon1')
+      let clickedArrow = icon1
+      const handleShowTickets1 = jest.fn((e) => dashboard.handleShowTickets(e, bills, clickedArrow, 1))
+    
       icon1.addEventListener('click', handleShowTickets1)
       userEvent.click(icon1)
       expect(handleShowTickets1).toHaveBeenCalled()
@@ -136,8 +182,11 @@ describe('Given I am connected as an Admin', () => {
       })
       document.body.innerHTML = DashboardUI({ data: { bills } })
 
-      const handleShowTickets1 = jest.fn((e) => dashboard.handleShowTickets(e, bills, 1))
       const icon1 = screen.getByTestId('arrow-icon1')
+      let clickedArrow = icon1 
+
+      const handleShowTickets1 = jest.fn((e) => dashboard.handleShowTickets(e, bills, clickedArrow, 1))
+      
       icon1.addEventListener('click', handleShowTickets1)
       userEvent.click(icon1)
       expect(handleShowTickets1).toHaveBeenCalled()

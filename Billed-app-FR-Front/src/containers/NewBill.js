@@ -24,23 +24,31 @@ export default class NewBill {
     const email = JSON.parse(localStorage.getItem("user")).email
     formData.append('file', file)
     formData.append('email', email)
-
-    if(this.store){
-      this.store
-      .bills()
-      .create({
-        data: formData,
-        headers: {
-          noContentType: true
-        }
-      })
-      .then(({fileUrl, key}) => {
-        this.billId = key
-        this.fileUrl = fileUrl
-        this.fileName = fileName
-      }).catch(error => console.error(error))
+    let allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i; 
+    const fileField = document.querySelector(`input[data-testid="file"]`)
+    let fileFieldError = document.createElement("span")
+    fileFieldError.classList.add("file-error-msg")
+    fileField.parentElement.append(fileFieldError)
+    if(!allowedExtensions.exec(filePath)) {
+      fileFieldError.textContent = "Merci de télécharger un fichier au format .jpg, .jpeg ou .png"
+    }else{
+      $('.file-error-msg').remove();
+      if(this.store){
+        this.store
+        .bills()
+        .create({
+          data: formData,
+          headers: {
+            noContentType: true
+          }
+        })
+        .then(({fileUrl, key}) => {
+          this.billId = key
+          this.fileUrl = fileUrl
+          this.fileName = fileName
+        }).catch(error => console.error(error))
+      }
     }
-    
   }
   handleSubmit = e => {
     e.preventDefault()
@@ -60,16 +68,8 @@ export default class NewBill {
       fileName: this.fileName,
       status: 'pending'
     }
-    let allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i; 
-    if(!allowedExtensions.exec(filePath)) {
-      const fileField = document.querySelector(`input[data-testid="file"]`)
-      let fileFieldError = document.createElement("span")
-      fileField.after(fileFieldError, "Merci de télécharger un fichier au format .jpg/.jpeg ou .png")
-    }else{
-      this.updateBill(bill)
-      this.onNavigate(ROUTES_PATH['Bills'])
-    }
-
+    this.updateBill(bill)
+    this.onNavigate(ROUTES_PATH['Bills'])
   }
 
   // not need to cover this function by tests

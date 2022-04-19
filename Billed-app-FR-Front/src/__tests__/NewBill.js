@@ -72,7 +72,6 @@ describe("Given I am connected as an employee", () => {
           localStorage: window.localStorage,
           onNavigate,
           PREVIOUS_LOCATION,
-          store,
         });
 
         const handleSubmit = jest.fn(newBill.handleSubmit)
@@ -82,63 +81,66 @@ describe("Given I am connected as an employee", () => {
         fireEvent.submit(newBillForm)
         
         expect(handleSubmit).toHaveBeenCalled()
-        const formNewBill = screen.getByTestId("form-new-bill")
-        expect(formNewBill).toBeTruthy()
+        expect(newBillForm).toBeTruthy()
       })
     })
     describe("When it's valid", () => {
       test("Then updateBill should be called", () => {
-        // jest.spyOn(mockStore, "bills")
-        // mockStore.bills(bills)
-        // document.body.innerHTML = NewBillUI();
-        // window.localStorage.setItem('user', JSON.stringify({
-        //   type: 'Employee',
-        // }))
-        // const onNavigate = (pathname) => {
-        //   document.body.innerHTML = ROUTES({ pathname });
-        // };
+        jest.spyOn(mockStore, "bills")
+        mockStore.bills(bills)
+        document.body.innerHTML = NewBillUI();
+        window.localStorage.setItem('user', JSON.stringify({
+          type: 'Employee',
+        }))
+        const onNavigate = (pathname) => {
+          document.body.innerHTML = ROUTES({ pathname });
+        };
 
-        // let PREVIOUS_LOCATION = "";
+        let PREVIOUS_LOCATION = "";
 
-        // const store = mockStore.bills(bills);
+        const store = mockStore.bills(bills);
 
-        // const newBill = new NewBill({
-        //   document,
-        //   localStorage: window.localStorage,
-        //   onNavigate,
-        //   PREVIOUS_LOCATION,
-        //   store,
-        // });
+        const newBill = new NewBill({
+          document,
+          localStorage: window.localStorage,
+          onNavigate,
+          PREVIOUS_LOCATION,
+        });
 
-        // const handleSubmit = jest.fn(newBill.handleSubmit)
+        const handleSubmit = jest.fn(newBill.handleSubmit)
 
-        // const filePath = screen.getByTestId("file");
-        // fireEvent.change(filePath, { target: { value: "" } });
+        const filePath = screen.getByTestId("file");
+        fireEvent.change(filePath, { target: { value: "" } });
 
-        // const inputType = screen.getByTestId("expense-type");
-        // fireEvent.change(inputType, { target: { value: 'Transports' } });
+        const inputType = screen.getByTestId("expense-type");
+        fireEvent.change(inputType, { target: { value: 'Transports' } });
 
-        // const inputName = screen.getByTestId("expense-name");
-        // fireEvent.change(inputName, { target: { value: 'Test' } });
+        const inputName = screen.getByTestId("expense-name");
+        fireEvent.change(inputName, { target: { value: 'Test' } });
 
-        // const inputCommentary = screen.getByTestId("commentary");
-        // fireEvent.change(inputCommentary, { target: { value: '' } });
+        const inputCommentary = screen.getByTestId("commentary");
+        fireEvent.change(inputCommentary, { target: { value: '' } });
 
-        // const inputDate = screen.getByTestId("datepicker");
-        // fireEvent.change(inputDate, { target: { value: '2022-04-04' } });
+        const inputDate = screen.getByTestId("datepicker");
+        fireEvent.change(inputDate, { target: { value: '2022-04-04' } });
 
-        // const inputAmount = screen.getByTestId("amount");
-        // fireEvent.change(inputAmount, { target: { value: 1 } });
+        const inputAmount = screen.getByTestId("amount");
+        fireEvent.change(inputAmount, { target: { value: 1 } });
 
-        // const inputVat = screen.getByTestId("vat");
-        // fireEvent.change(inputVat, { target: { value: '1' } });
+        const inputVat = screen.getByTestId("vat");
+        fireEvent.change(inputVat, { target: { value: '1' } });
 
-        // const inputPCT = screen.getByTestId("pct");
-        // fireEvent.change(inputPCT, { target: { value: 1 } });
+        const inputPCT = screen.getByTestId("pct");
+        fireEvent.change(inputPCT, { target: { value: 1 } });
 
-        // const newBillForm = screen.getByTestId("form-new-bill")
-        // newBillForm.addEventListener("submit", handleSubmit)
-        // fireEvent.submit(newBillForm)
+        const newBillForm = screen.getByTestId("form-new-bill")
+        newBillForm.addEventListener("submit", handleSubmit)
+        fireEvent.submit(newBillForm)
+
+        const newBillBtn = screen.getByTestId("btn-new-bill")
+
+        expect(handleSubmit).toHaveBeenCalled()
+        expect(newBillBtn).toBeTruthy()
     })
   })
  })
